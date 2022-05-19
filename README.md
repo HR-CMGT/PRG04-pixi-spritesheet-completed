@@ -1,6 +1,9 @@
 # Spritesheet
 
+[Uitgewerkte code](https://github.com/HR-CMGT/PRG04-pixi-spritesheet-completed)
+
 Een spritesheet is een enkele afbeelding waarin alle frames van een animatie zitten.
+
 [DEMO](https://hr-cmgt.github.io/PRG04-pixi-spritesheet-completed/)
 
 ![sheet](./src/images/sheet-example.png)
@@ -89,6 +92,77 @@ class Game {
 <br>
 <br>
 
+
+
+## Meerdere animaties in 1 spritesheet
+
+Op basis van de spritesheet kan je meerdere arrays aanmaken waar de verschillende animaties inzitten. 
+
+### Game.ts
+```typescript
+createCatFrames() {
+    // create an array of textures from an image path
+    let idleAnimation: PIXI.Texture[] = []
+    let jumpAnimation: PIXI.Texture[] = []
+    for (let i = 1; i <= 10; i++) {
+        // frame 1 tot en met 10 is de idle animation
+        idleAnimation.push(PIXI.Texture.from(`poes_${i}.png`))
+    }
+    for (let i = 11; i <= 30; i++) {
+        // frame 11 tot en met 30 is de jump animation
+        jumpAnimation.push(PIXI.Texture.from(`poes_${i}.png`))
+    }
+}
+```
+
+<br>
+<br>
+<br>
+
+### JumpCat.ts
+
+Alle array's (met alle animaties) geef je aan de kat. En de idleAnimation geef je aan de super(). Dit is dan de startanimatie.
+
+```typescript
+class JumpCat extends PIXI.AnimatedSprite {
+  constructor(idleAnimation: PIXI.Texture[], jumpAnimation: PIXI.Texture[]) {
+    super(idleAnimation)
+  }
+}
+
+let myJumpingCat = new JumpCat(idleAnimation, jumpAnimation)
+```
+
+
+
+Na een bepaalde actie kan je dan de animatie frames wisselen via `this.textures = ...`:
+
+```typescript
+class JumpCat extends PIXI.AnimatedSprite {
+
+  idleAnimation:PIXI.Texture[]
+  jumpAnimation:PIXI.Texture[]
+
+  constructor(idleAnimation: PIXI.Texture[], jumpAnimation: PIXI.Texture[]) {
+    super(idleAnimation)
+    
+    this.idleAnimation = idleAnimation
+    this.jumpAnimation = jumpAnimation
+  }
+  
+  // als je springt, verander je de frames voor de animatie
+  jump(){
+    this.textures = jumpAnimation
+    this.play()
+  }
+}
+
+```
+
+<br>
+<br>
+<br>
+
 ## 💀 Live server
 
 De pixi loader werkt niet samen met het `import` statement voor JSON files. Ook is het niet handig dat je live server steeds een andere bestandsnaam aan je spritesheet geeft. Om dit op te lossen gebruiken we een `static` map in het project. Deze map staat **_buiten_** de `src` map.
@@ -113,6 +187,15 @@ Om de plugin te activeren maak je een `.parcelrc` bestand, daarin staat:
 <br>
 <br>
 <br>
+
+## Completed code
+
+https://github.com/HR-CMGT/PRG04-pixi-spritesheet-completed
+
+<br>
+<br>
+<br>
+
 
 ## Links
 
